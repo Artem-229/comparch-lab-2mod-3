@@ -6,6 +6,10 @@ import (
 	"os"
 )
 
+var (
+	emptyLogger = slog.New(slog.NewTextHandler(io.Discard, nil))
+)
+
 func InitLogger(level slog.Level) *slog.Logger {
 	handler := slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
 		Level: level,
@@ -15,7 +19,7 @@ func InitLogger(level slog.Level) *slog.Logger {
 }
 
 func EmptyLogger() *slog.Logger {
-	return slog.New(slog.NewTextHandler(io.Discard, nil))
+	return emptyLogger
 }
 
 func Error(err error) slog.Attr {
