@@ -27,8 +27,13 @@ func NewQPool[T any](workers int, routine ProcessRoutine[T]) *QPool[T] {
 		go func() {
 			defer ip.wg.Done()
 
-			for task := range ip.tasks {
-				routine(ip.ctx, i, task)
+			for {
+				select {
+				case task := <-ip.tasks:
+					routine(ip.ctx, i, task)
+				case <-ip.ctx.Done():
+					return
+				}
 			}
 		}()
 	}
@@ -49,10 +54,8 @@ func (ip *QPool[T]) Push(task T) error {
 	return ip.PushContext(context.Background(), task)
 }
 
-func (ip *QPool[T]) Stop() {
-	ip.once.Do(func() {
-		ip.cancel()
-		close(ip.tasks)
-		ip.wg.Wait()
-	})
+func (ip *QPool[T]) Wait() {
+	ip.cancel()
+	ip.wg.Wait()
+	close(ip.tasks)
 }
