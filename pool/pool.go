@@ -45,6 +45,10 @@ func (ip *Pool[T]) PushContext(ctx context.Context, task T) error {
 	}
 }
 
+func (ip *Pool[T]) Push(task T) error {
+	return ip.PushContext(context.Background(), task)
+}
+
 func (ip *Pool[T]) Stop() {
 	ip.once.Do(func() {
 		ip.cancel()
