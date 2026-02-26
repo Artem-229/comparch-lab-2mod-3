@@ -29,7 +29,7 @@ func InvertImageProcessor(options imgpool.ImageProcessorOptions) imgpool.ImagePr
 		logger.Debug("processing image...",
 			slog.String("format", format),
 			slog.Int("BoundsX", bounds.Size().X),
-			slog.Int("BoundsX", bounds.Size().Y))
+			slog.Int("BoundsY", bounds.Size().Y))
 
 		inverted := image.NewRGBA(bounds)
 
