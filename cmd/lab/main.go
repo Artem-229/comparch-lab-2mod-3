@@ -24,7 +24,7 @@ func main() {
 	output_dir := flag.String("output", "./output", "destination directory")
 	workers_cnt := flag.Int("workers", 4, "workers count, must be in (0, 500]")
 	algo := flag.String("algo", "invert", "needed action, only \"invert\" action is currently supported")
-	timing := flag.Bool("timing", false, "-timing")
+	timing := flag.Bool("duration", false, "assess the execution duration")
 	flag.Parse()
 
 	logger := logging.InitLogger(slog.Level(*log_lvl))
@@ -100,11 +100,12 @@ func main() {
 		logger.Info("stopping processing...")
 		return
 	}
-	logger.Info("writing output...")
 
 	if *timing {
-		logger.Info("done", slog.Duration("time passed", time.Since(start)))
+		logger.Info("total pool execution time", slog.Duration("time", time.Since(start)))
 	}
+
+	logger.Info("writing output...")
 
 	collection.Range(func(key, value any) bool {
 		if stopctx.Err() != nil {
