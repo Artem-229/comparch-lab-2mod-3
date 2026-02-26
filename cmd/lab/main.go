@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"sync"
+	"time"
 
 	"github.com/gmlazutin/comparch-lab-2mod-3/internal/logging"
 	"github.com/gmlazutin/comparch-lab-2mod-3/internal/util"
@@ -74,6 +75,8 @@ func main() {
 		)
 	})
 
+	start := time.Now()
+
 	for _, file := range files {
 		f, err := os.Open(file)
 		if err != nil {
@@ -97,6 +100,8 @@ func main() {
 		return
 	}
 	logger.Info("writing output...")
+
+	logger.Info("done", slog.Duration("time passed", time.Since(start)))
 
 	collection.Range(func(key, value any) bool {
 		if stopctx.Err() != nil {
